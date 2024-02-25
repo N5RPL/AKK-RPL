@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
@@ -40,7 +41,7 @@ Route::post('/register', [RegisterController::class, 'processRegister'])->name('
 Route::get('/login', [LoginController::class, 'index'])->name('login.index');
 Route::post('/login', [LoginController::class, 'processLogin'])->name('login.process');
 
-Route::get('/logout', function(){
+Route::get('/logout', function () {
     Auth::logout();
     Alert::success('Berhasil Keluar');
     return redirect()->route('login.index');
@@ -48,21 +49,24 @@ Route::get('/logout', function(){
 
 Route::get('/', [PhotoController::class, 'home'])->name('home');
 
-Route::controller(PhotoController::class)->middleware('auth')->name('photo.')->group(function() {
+Route::controller(PhotoController::class)->middleware('auth')->name('photo.')->group(function () {
     Route::get('/photo/{photo_id}', 'index')->name('index');
     Route::get('/post', 'postPhoto')->name('post');
     Route::post('/post', 'postPhotoProcess')->name('postProcess');
+    Route::put('/photo/{photo_id}', 'updatePhoto')->name('update');
 });
 
-Route::controller(LikePhotoController::class)->middleware('auth')->name('like_photo.')->group(function() {
+Route::controller(LikePhotoController::class)->middleware('auth')->name('like_photo.')->group(function () {
     Route::post('/like', 'like')->name('like');
     Route::post('/unlike', 'unlike')->name('unlike');
 });
 
-Route::controller(CommentController::class)->middleware('auth')->name('comment.')->group(function() {
+Route::controller(CommentController::class)->middleware('auth')->name('comment.')->group(function () {
     Route::post('/comment', 'post')->name('post');
+    Route::put('/comment/{comment_id}', 'updateComment')->name('update');
 });
-Route::controller(ProfileController::class)->name('profile.')->group(function() {
+Route::controller(ProfileController::class)->name('profile.')->group(function () {
     Route::get('/profile', 'index')->name('index');
     Route::get('/profile/{user_id}', 'people')->name('people');
+    Route::put('/profile', 'updateProfile')->name('update');
 });

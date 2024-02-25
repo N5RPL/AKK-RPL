@@ -6,11 +6,57 @@
             <div class="d-flex justify-content-between align-items-center">
                 <a href="{{ route('profile.people', $data->user->id) }}"
                     class="ms-3 mt-3 mb-4 d-flex justify-content-start align-items-center mb-2 text-decoration-none">
-                    <img src="https://dummyimage.com/640x1:1/" alt="profile-picture" class="img-fluid rounded-circle"
-                        width="50">
+                    <img src="{{ $data->user->avatar != null ? asset('storage/' . $data->user->avatar) : 'https://dummyimage.com/640x1:1/' }}"
+                        alt="profile-picture" width="50" height="50" style="object-fit: cover; border-radius: 100%">
                     <span class="ms-2 fs-5 text-dark">{{ $data->user->nama }}</span>
                 </a>
-                <p class="text-muted fs-6 me-3">{{ date('d-m-Y', strtotime($data->created_at)) }}</p>
+                <div class="d-flex align-items-center gap-2">
+                    @if (Auth::user()->id == $data->user_id)
+                        <svg data-bs-toggle="modal" data-bs-target="#editPhoto{{ $data->id }}"
+                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-pencil-square" viewBox="0 0 16 16">
+                            <path
+                                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                            <path fill-rule="evenodd"
+                                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                        </svg>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="editPhoto{{ $data->id }}" tabindex="-1"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Foto</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <form action="{{ route('photo.update', $data->id) }}" method="POST">
+                                        @csrf
+                                        @method('put')
+                                        <div class="modal-body">
+                                            <div class="form-group mb-3">
+                                                <label for="judul_foto" class="form-label">Judul Foto</label>
+                                                <input type="text" name="judul_foto" id="judul_foto" class="form-control"
+                                                    value="{{ $data->judul_foto }}">
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label for="deskripsi_foto" class="form-label">Deskripsi Foto</label>
+                                                <textarea name="deskripsi_foto" id="deskripsi_foto" cols="30" rows="%" class="form-control">{{ $data->deskripsi_foto }}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Batal</button>
+                                            <button type="submit" class="btn btn-primary">Simpan</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                    <p class="text-muted fs-6 me-3">{{ date('d-m-Y', strtotime($data->created_at)) }}</p>
+                </div>
             </div>
             <img class="img-fluid mx-auto d-block" src="{{ asset('storage/' . $data->lokasi_file) }}"
                 alt="{{ $data->judul_foto }}">
@@ -76,10 +122,59 @@
                                     class="img-fluid rounded-circle" width="50">
                                 <span class="ms-2 fs-5 text-dark">{{ $comment->user->nama }}</span>
                             </a>
-                            <p class="text-muted fs-6">{{ date('d-m-Y', strtotime($comment->created_at)) }}</p>
+                            <div class="d-flex align-items-center gap-2">
+                                @if (Auth::user()->id == $comment->user->id)
+                                    <svg data-bs-toggle="modal" data-bs-target="#editComment{{ $comment->id }}"
+                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                        <path
+                                            d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                        <path fill-rule="evenodd"
+                                            d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                                    </svg>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="editComment{{ $comment->id }}" tabindex="-1"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Komentar</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <form action="{{ route('comment.update', $comment->id) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('put')
+                                                    <div class="modal-body">
+                                                        <div class="form-group mb-3">
+                                                            <label for="isi_komentar" class="form-label">Isi
+                                                                Komentar</label>
+                                                            <input type="text" name="isi_komentar" id="isi_komentar"
+                                                                class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Batal</button>
+                                                        <button type="submit" class="btn btn-primary">Simpan</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                                <p class="text-muted fs-6">{{ date('d-m-Y', strtotime($comment->created_at)) }}</p>
+                            </div>
                         </div>
-                        <span class="text-muted fs-6">{{ $comment->isi_komentar }}</span>
-                    </li>
+                        <span class="text-muted fs-6">
+                            {{ $comment->isi_komentar }}
+                            @if ($comment->updated_at != $comment->created_at)
+                                <span class="text-muted fst-italic">(edited)</span>
+                            @endif
+                        </span>
+                    </li>)
                 @endforeach
             </ul>
         </div>
