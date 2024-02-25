@@ -80,4 +80,22 @@ class PhotoController extends Controller
         Alert::success('Foto berhasil diupdate!');
         return redirect()->back();
     }
+
+    public function deletePhoto($photo_id)
+    {
+        $photo = Photo::findOrFail($photo_id);
+
+        if (Auth::user()->id != $photo->user_id) {
+            Alert::error('Anda tidak memiliki akses!');
+            return redirect()->back();
+        }
+
+        if (file_exists(public_path('storage/' . $photo->lokasi_file))) {
+            unlink(public_path('storage/' . $photo->lokasi_file));
+        }
+
+        $photo->delete();
+        Alert::success('Foto berhasil dihapus!');
+        return redirect()->route('home');
+    }
 }

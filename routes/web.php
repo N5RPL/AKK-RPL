@@ -54,6 +54,7 @@ Route::controller(PhotoController::class)->middleware('auth')->name('photo.')->g
     Route::get('/post', 'postPhoto')->name('post');
     Route::post('/post', 'postPhotoProcess')->name('postProcess');
     Route::put('/photo/{photo_id}', 'updatePhoto')->name('update');
+    Route::delete('/photo/{photo_id}', 'deletePhoto')->name('delete');
 });
 
 Route::controller(LikePhotoController::class)->middleware('auth')->name('like_photo.')->group(function () {
