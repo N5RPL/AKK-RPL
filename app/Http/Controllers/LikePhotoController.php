@@ -23,7 +23,7 @@ class LikePhotoController extends Controller
         }
 
         $data = Photo::with('user')
-        ->with('comments')
+        // ->with('comments')
         ->withCount('likes')
         ->withExists('likedByUser', function ($query) {
             $query->where('user_id', auth()->user()->id);
@@ -41,7 +41,7 @@ class LikePhotoController extends Controller
 
         LikesPhoto::where('photo_id', $request->photo_id)->where('user_id', auth()->user()->id)->delete();
         $data = Photo::with('user')
-        ->with('comments')
+        // ->with('comments')
         ->withCount('likes')
         ->withExists('likedByUser', function ($query) {
             $query->where('user_id', auth()->user()->id);

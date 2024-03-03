@@ -51,6 +51,7 @@
                                                 <option></option>
                                                 @foreach ($albums as $album)
                                                     @if ($name_album && $name_album == $album->nama_album)
+                                                        {{-- @if ($data->album_id && $data->album_id == $album->id) --}}
                                                         <option selected value="{{ $album->id }}">
                                                             {{ $album->nama_album }}
                                                         </option>
@@ -233,7 +234,8 @@
             var like_svg =
                 '<svg xmlns="http://www.w3.org/2000/svg" width="2rem" height="2rem" fill="currentColor" class="bi bi-heart-fill text-danger" viewBox="0 0 16 16"><path fill-rule="evenodd"d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" /></svg>'
             const xhr = new XMLHttpRequest();
-            xhr.open("POST", like_state ? "/fh_galerifoto/public/unlike" : "/fh_galerifoto/public/like", true);
+            // xhr.open("POST", like_state ? "/fh_galerifoto/public/unlike" : "/fh_galerifoto/public/like", true);
+            xhr.open("POST", like_state ? '{{ route('like_photo.unlike') }}' : '{{ route('like_photo.like') }}', true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             //xhr.setRequestHeader("Csrf-Token", document.getElementsByName("_token").value);
             xhr.onload = () => {

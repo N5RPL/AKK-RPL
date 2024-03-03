@@ -27,6 +27,8 @@ class PhotoController extends Controller
             $name_album = Album::where('id', $data->album_id)->orderBy('created_at', 'desc')->first()->nama_album;
         }
     return view('pages.photo', compact('data','albums','name_album'));
+    // $albums = Album::where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->get();
+    //         return view('pages.photo', compact('data','albums'));
     }
 
     public function home()
