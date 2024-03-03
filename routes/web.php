@@ -7,6 +7,7 @@ use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LikePhotoController;
+use App\Http\Controllers\AlbumController;
 
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -52,6 +53,8 @@ Route::controller(PhotoController::class)->middleware('auth')->name('photo.')->g
     Route::get('/photo/{photo_id}', 'index')->name('index');
     Route::get('/post', 'postPhoto')->name('post');
     Route::post('/post', 'postPhotoProcess')->name('postProcess');
+    Route::put('/photo/{photo_id}', 'updatePhoto')->name('update');
+    Route::delete('/photo/{photo_id}', 'deletePhoto')->name('delete');
 });
 
 Route::controller(LikePhotoController::class)->middleware('auth')->name('like_photo.')->group(function() {
@@ -61,8 +64,22 @@ Route::controller(LikePhotoController::class)->middleware('auth')->name('like_ph
 
 Route::controller(CommentController::class)->middleware('auth')->name('comment.')->group(function() {
     Route::post('/comment', 'post')->name('post');
+    Route::put('/comment/{comment_id}', 'updateComment')->name('update');
+    Route::delete('/comment/{comment_id}', 'deleteComment')->name('delete');
 });
 Route::controller(ProfileController::class)->name('profile.')->group(function() {
     Route::get('/profile', 'index')->name('index');
     Route::get('/profile/{user_id}', 'people')->name('people');
+    Route::put('/profile', 'updateProfile')->name('update');
+});
+
+Route::controller(AlbumController::class)->name('album.')->group(function() {
+    Route::get('/album/{user_id}', 'index')->name('index');
+    Route::get('/data-album/{album_id}', 'data_album')->name('data_album');
+});
+
+Route::controller(AlbumController::class)->middleware('auth')->name('album.')->group(function() {
+    Route::get('/create_album', 'create_album')->name('create_album');
+    Route::post('/create_album', 'postAlbumProcess')->name('create_album_post');
+    Route::delete('/album/{album_id}', 'deleteAlbum')->name('delete');
 });

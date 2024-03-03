@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Album;
 use App\Models\Photo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Auth;
 
 class PhotoController extends Controller
 {
@@ -19,7 +21,12 @@ class PhotoController extends Controller
             $query->where('user_id', auth()->user()->id);
         })
         ->find($photo_id);
-    return view('pages.photo', compact('data'));
+        $albums = Album::where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->get();
+        $name_album = "";
+        if($data->album_id){
+            $name_album = Album::where('id', $data->album_id)->orderBy('created_at', 'desc')->first()->nama_album;
+        }
+    return view('pages.photo', compact('data','albums','name_album'));
     }
 
     public function home()
@@ -61,5 +68,41 @@ class PhotoController extends Controller
             Storage::delete($photo_path);
             return redirect()->back();
         }
+    }
+
+    public function updatePhoto(Request $request, $photo_id)
+    {
+        $photo = Photo::findOrFail($photo_id);
+
+        if (Auth::user()->id != $photo->user_id) {
+            Alert::error('Anda tidak memiliki akses!');
+            return redirect()->back();
+        }
+
+        $photo->judul_foto = $request->judul_foto;
+        $photo->deskripsi_foto = $request->deskripsi_foto;
+        $photo->album_id = $request->album_id;
+        $photo->update();
+
+        Alert::success('Foto berhasil diupdate!');
+        return redirect()->back();
+    }
+
+    public function deletePhoto($photo_id)
+    {
+        $photo = Photo::findOrFail($photo_id);
+
+        if (Auth::user()->id != $photo->user_id) {
+            Alert::error('Anda tidak memiliki akses!');
+            return redirect()->back();
+        }
+
+        if (file_exists(public_path('storage/' . $photo->lokasi_file))) {
+            unlink(public_path('storage/' . $photo->lokasi_file));
+        }
+
+        $photo->delete();
+        Alert::success('Foto berhasil dihapus!');
+        return redirect()->route('home');
     }
 }

@@ -10,12 +10,6 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{{ route('home') }}">Home</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Features</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Pricing</a>
-                </li>
             </ul>
             @if (!Auth::check())
                 <div>
@@ -31,6 +25,8 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{{ route('profile.index') }}">Profile</a></li>
                         <li><a class="dropdown-item" href="{{ route('photo.post') }}">Post</a></li>
+                        <li><a class="dropdown-item" href="{{ route('album.create_album') }}">Create Album</a></li>
+                        <li><a class="dropdown-item" href="{{ route('album.index', Auth::user()->id) }}">Album</a></li>
                         <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
                     </ul>
                 </div>
