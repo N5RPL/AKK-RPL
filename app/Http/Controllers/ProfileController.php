@@ -11,7 +11,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 class ProfileController extends Controller
 {
     public function index()
-    {
+{
         $user = auth()->user();
         $photos = Photo::where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->get();
         return view('pages.profile', compact('photos', 'user'));
@@ -22,7 +22,7 @@ class ProfileController extends Controller
         if (!User::find($user_id)) {
             return redirect()->route('home');
         }
-        $user = User::find($user_id)->select('id', 'nama', 'avatar', 'created_at')->first();
+        $user = User::where('id', $user_id)->select('id', 'nama', 'avatar', 'created_at')->first();
         $photos = Photo::where('user_id', $user_id)->orderBy('created_at', 'desc')->get();
         return view('pages.profile', compact('photos', 'user'));
     }

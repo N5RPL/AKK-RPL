@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="my-5 d-flex flex-column align-items-center">
-        <img src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : 'https://dummyimage.com/640x1:1/' }}"
+        <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : 'https://dummyimage.com/640x1:1/' }}"
             alt="profile-picture" width="200" height="200" class="mb-2 d-block"
             style="object-fit: cover; border-radius: 100%" />
         <div class="d-flex align-items-center gap-2">
@@ -34,7 +34,7 @@
                                 <div class="form-group mb-3">
                                     <label for="nama" class="form-label">Nama</label>
                                     <input type="text" name="nama" id="nama" class="form-control"
-                                        value="{{ Auth::user()->nama }}">
+                                        value="{{ $user->nama }}">
                                 </div>
                             </div>
                             <div class="modal-footer">

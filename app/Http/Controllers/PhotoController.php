@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use RealRashid\SweetAlert\Facades\Alert;
+use App\Models\Album;
 
 class PhotoController extends Controller
 {
@@ -20,7 +21,8 @@ class PhotoController extends Controller
                 $query->where('user_id', auth()->user()->id);
             })
             ->find($photo_id);
-        return view('pages.photo', compact('data'));
+            $albums = Album::where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->get();
+            return view('pages.photo', compact('data','albums'));
     }
 
     public function home()
@@ -37,7 +39,7 @@ class PhotoController extends Controller
     public function postPhotoProcess(Request $request)
     {
         $request->validate([
-            'photo' => ['required', 'image', 'mimes:jpg,png,jpeg', 'max:4096'],
+            'photo' => ['required', 'mimes:jpg,png,jpeg', 'max:4096'],
             'judul_foto' => ['required', 'max:255'],
             'deskripsi_foto' => ['required', 'min:3'],
         ]);
@@ -75,12 +77,13 @@ class PhotoController extends Controller
 
         $photo->judul_foto = $request->judul_foto;
         $photo->deskripsi_foto = $request->deskripsi_foto;
+        $photo->album_id = $request->album_id;
         $photo->update();
 
         Alert::success('Foto berhasil diupdate!');
         return redirect()->back();
     }
-
+    // fungsi untuk menghapus postingan
     public function deletePhoto($photo_id)
     {
         $photo = Photo::findOrFail($photo_id);
