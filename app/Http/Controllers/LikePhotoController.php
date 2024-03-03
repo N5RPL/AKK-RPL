@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\LikesPhoto;
+use App\Models\Photo;
 
 class LikePhotoController extends Controller
 {
@@ -21,7 +22,14 @@ class LikePhotoController extends Controller
             ]);
         }
 
-        return redirect()->route('photo.index', $request->photo_id);
+        $data = Photo::with('user')
+        ->withCount('likes')
+        ->withExists('likedByUser', function ($query) {
+            $query->where('user_id', auth()->user()->id);
+        })
+        ->find($request->photo_id);
+
+        return response()->json(['like_count' => $data->likes_count]);
     }
 
     public function unlike(Request $request)
@@ -31,7 +39,14 @@ class LikePhotoController extends Controller
         ]);
 
         LikesPhoto::where('photo_id', $request->photo_id)->where('user_id', auth()->user()->id)->delete();
-        return redirect()->route('photo.index', $request->photo_id);
+        $data = Photo::with('user')
+        ->withCount('likes')
+        ->withExists('likedByUser', function ($query) {
+            $query->where('user_id', auth()->user()->id);
+        })
+        ->find($request->photo_id);
+
+        return response()->json(['like_count' => $data->likes_count]);
     }
 
 }

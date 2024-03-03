@@ -31,6 +31,8 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{{ route('profile.index') }}">Profile</a></li>
                         <li><a class="dropdown-item" href="{{ route('photo.post') }}">Post</a></li>
+                        <li><a class="dropdown-item" href="{{ route('album.create_album') }}">Create Album</a></li>
+                        <li><a class="dropdown-item" href="{{ route('album.index', Auth::user()->id) }}">Album</a></li>
                         <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
                     </ul>
                 </div>
